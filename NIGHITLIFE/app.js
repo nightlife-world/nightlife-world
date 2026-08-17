@@ -48,7 +48,6 @@ function initializeMap() {
         "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
             maxZoom: 19,
-
             attribution:
                 '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }
@@ -87,7 +86,6 @@ function showVenuesOnMap(list) {
         ]);
 
         marker.bindPopup(`
-            
             <div class="map-popup">
 
                 <h3>
@@ -107,14 +105,11 @@ function showVenuesOnMap(list) {
                     💬 ${venue.reviews_count || 0} recensioni
                 </p>
 
-                <button
-                    onclick="openVenue(${venue.id})"
-                >
+                <button onclick="openVenue(${venue.id})">
                     Vedi locale
                 </button>
 
             </div>
-
         `);
 
         marker.addTo(markersLayer);
@@ -142,21 +137,17 @@ function renderVenues(list) {
         document.getElementById("resultCount");
 
     if (resultCount) {
-
         resultCount.textContent =
             `${list.length} locali`;
-
     }
 
 
     if (list.length === 0) {
 
         container.innerHTML = `
-            
             <div class="empty">
                 Nessun locale trovato.
             </div>
-
         `;
 
         return;
@@ -176,10 +167,12 @@ function renderVenues(list) {
             <article class="venue">
 
                 <div class="venue-image">
+
                     ${venue.image_url
                         ? `<img src="${venue.image_url}" alt="${venue.name}">`
                         : "🎧"
                     }
+
                 </div>
 
                 <div class="venue-info">
@@ -268,7 +261,6 @@ async function loadVenues() {
 
     venues = data || [];
 
-
     renderVenues(venues);
 
     showVenuesOnMap(venues);
@@ -303,13 +295,9 @@ function applyFilters() {
             const searchable = [
 
                 venue.name || "",
-
                 venue.city || "",
-
                 venue.country || "",
-
                 venue.category || "",
-
                 ...music
 
             ]
@@ -446,9 +434,7 @@ function openVenue(id) {
         </p>
 
         <div class="rating">
-
             ⭐ ${venue.rating || 0}
-
         </div>
 
         <p style="margin-top:20px;color:#aaa">
@@ -830,70 +816,35 @@ function detectLocation() {
 
 
 // ==========================================
-// AVVIO APP
-// ==========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    async () => {
-
-        // Inizializza la mappa PRIMA
-        // di caricare i locali
-
-        initializeMap();
-
-
-        // Carica i locali da Supabase
-
-        await loadVenues();
-
-
-        // Carica i post
-
-        renderPosts();
-
-
-        // Ricerca
-
-        const searchInput =
-            document.getElementById(
-                "searchInput"
-            );
-
-
-        if (searchInput) {
-
-            searchInput.addEventListener(
-                "input",
-                applyFilters
-            );
-
-        }
-
-    }
-);
-// ==========================================
 // REGISTRAZIONE
 // ==========================================
 
 async function registerUser() {
 
+    const usernameElement =
+        document.getElementById("authUsername");
+
+    const emailElement =
+        document.getElementById("authEmail");
+
+    const passwordElement =
+        document.getElementById("authPassword");
+
+
     const username =
-        document
-        .getElementById("authUsername")
-        .value
-        .trim();
+        usernameElement
+            ? usernameElement.value.trim()
+            : "";
 
     const email =
-        document
-        .getElementById("authEmail")
-        .value
-        .trim();
+        emailElement
+            ? emailElement.value.trim()
+            : "";
 
     const password =
-        document
-        .getElementById("authPassword")
-        .value;
+        passwordElement
+            ? passwordElement.value
+            : "";
 
 
     if (!username || !email || !password) {
@@ -923,14 +874,24 @@ async function registerUser() {
 
         email: email,
 
-        password: password
+        password: password,
+
+        options: {
+
+            emailRedirectTo:
+                "https://nightlife-world.github.io/nightlife-world/"
+
+        }
 
     });
 
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Errore registrazione:",
+            error
+        );
 
         alert(
             error.message
@@ -950,22 +911,29 @@ async function registerUser() {
     }
 
 
+    // ==========================================
+    // CREA / AGGIORNA PROFILO
+    // ==========================================
+
     const {
         error: profileError
     } = await db
         .from("profiles")
-        .insert({
-
-            id: data.user.id,
-
-            username: username
-
-        });
+        .upsert(
+            {
+                id: data.user.id,
+                username: username
+            },
+            {
+                onConflict: "id"
+            }
+        );
 
 
     if (profileError) {
 
         console.error(
+            "Errore profilo:",
             profileError
         );
 
@@ -978,12 +946,7 @@ async function registerUser() {
 
 
     alert(
-        "Account creato! 🎉"
-    );
-
-
-    showLoggedProfile(
-        username
+        "Account creato! 🎉 Controlla la tua email per confermare l'account."
     );
 
 }
@@ -995,16 +958,22 @@ async function registerUser() {
 
 async function loginUser() {
 
+    const emailElement =
+        document.getElementById("authEmail");
+
+    const passwordElement =
+        document.getElementById("authPassword");
+
+
     const email =
-        document
-        .getElementById("authEmail")
-        .value
-        .trim();
+        emailElement
+            ? emailElement.value.trim()
+            : "";
 
     const password =
-        document
-        .getElementById("authPassword")
-        .value;
+        passwordElement
+            ? passwordElement.value
+            : "";
 
 
     if (!email || !password) {
@@ -1031,7 +1000,10 @@ async function loginUser() {
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Errore login:",
+            error
+        );
 
         alert(
             error.message
@@ -1041,13 +1013,33 @@ async function loginUser() {
     }
 
 
+    // ==========================================
+    // CARICA PROFILO
+    // ==========================================
+
     const {
-        data: profile
+        data: profile,
+        error: profileError
     } = await db
         .from("profiles")
         .select("username")
         .eq("id", data.user.id)
-        .single();
+        .maybeSingle();
+
+
+    if (profileError) {
+
+        console.error(
+            "Errore profilo:",
+            profileError
+        );
+
+        alert(
+            "Accesso riuscito, ma non riesco a caricare il profilo."
+        );
+
+        return;
+    }
 
 
     showLoggedProfile(
@@ -1160,3 +1152,40 @@ async function logoutUser() {
     );
 
 }
+
+
+// ==========================================
+// AVVIO APP
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        // Inizializza mappa
+        initializeMap();
+
+        // Carica locali
+        await loadVenues();
+
+        // Carica post
+        renderPosts();
+
+        // Ricerca
+        const searchInput =
+            document.getElementById(
+                "searchInput"
+            );
+
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                applyFilters
+            );
+
+        }
+
+    }
+);
