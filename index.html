@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NIGHTLIFE WORLD</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet Map -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="logo">
+        NIGHT<span>LIFE</span>
+    </div>
+
+    <div class="search-box">
+        🔎
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Cerca città, locali, eventi..."
+        >
+    </div>
+
+    <button class="location-btn" onclick="detectLocation()">
+        📍
+    </button>
+
+</header>
+
+
+<main>
+
+<section class="hero">
+
+    <div>
+
+        <p class="small-title">
+            THE WORLD IS YOUR NIGHT
+        </p>
+
+        <h1>
+            Scopri dove<br>
+            <span>inizia la notte.</span>
+        </h1>
+
+        <p class="hero-text">
+            Trova discoteche, bar, club, beach club,
+            eventi e nightlife in tutto il mondo.
+        </p>
+
+        <button
+            class="main-button"
+            onclick="showExplore()"
+        >
+            Esplora la nightlife →
+        </button>
+
+    </div>
+
+</section>
+
+
+<section id="explore">
+
+    <div class="section-title">
+
+        <div>
+            <p class="small-title">EXPLORE</p>
+            <h2>Scopri i locali</h2>
+        </div>
+
+        <span id="resultCount">
+            0 locali
+        </span>
+
+    </div>
+
+
+    <div class="categories">
+
+        <button
+            class="category active"
+            onclick="filterCategory('all', this)"
+        >
+            🌎 Tutti
+        </button>
+
+        <button
+            class="category"
+            onclick="filterCategory('club', this)"
+        >
+            🎧 Discoteche
+        </button>
+
+        <button
+            class="category"
+            onclick="filterCategory('bar', this)"
+        >
+            🍸 Bar
+        </button>
+
+        <button
+            class="category"
+            onclick="filterCategory('beach', this)"
+        >
+            🌴 Beach Club
+        </button>
+
+        <button
+            class="category"
+            onclick="filterCategory('pub', this)"
+        >
+            🍺 Pub
+        </button>
+
+        <button
+            class="category"
+            onclick="filterCategory('live', this)"
+        >
+            🎸 Live Music
+        </button>
+
+    </div>
+
+
+    <div id="map"></div>
+
+
+    <div
+        id="venues"
+        class="venues"
+    ></div>
+
+</section>
+
+
+<section id="community">
+
+    <div class="section-title">
+
+        <div>
+            <p class="small-title">
+                COMMUNITY
+            </p>
+
+            <h2>
+                Cosa succede stasera
+            </h2>
+        </div>
+
+    </div>
+
+
+    <div id="posts"></div>
+
+</section>
+
+
+<section id="profile">
+
+    <div class="profile-card">
+
+        <div class="avatar">
+            👤
+        </div>
+
+        <h2 id="profileTitle">
+            Accedi a NIGHTLIFE WORLD
+        </h2>
+
+        <p id="profileSubtitle">
+            Recensisci locali, pubblica post e condividi le tue serate.
+        </p>
+
+
+        <!-- LOGIN / REGISTRAZIONE -->
+
+        <div id="authBox">
+
+            <input
+                id="authUsername"
+                type="text"
+                placeholder="Username"
+            >
+
+            <input
+                id="authEmail"
+                type="email"
+                placeholder="Email"
+            >
+
+            <input
+                id="authPassword"
+                type="password"
+                placeholder="Password"
+            >
+
+
+            <button
+                class="main-button"
+                onclick="registerUser()"
+            >
+                Crea account
+            </button>
+
+
+            <button
+                class="auth-secondary"
+                onclick="loginUser()"
+            >
+                Ho già un account → Accedi
+            </button>
+
+        </div>
+
+
+        <!-- PROFILO LOGGATO -->
+
+        <div
+            id="loggedProfile"
+            style="display:none;"
+        >
+
+            <p>
+                👋 Ciao
+                <strong id="loggedUsername"></strong>
+            </p>
+
+            <button
+                class="main-button"
+                onclick="logoutUser()"
+            >
+                Esci
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-item active"
+        onclick="goTo('explore', this)"
+    >
+        🏠
+        <span>Home</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="goTo('explore', this)"
+    >
+        🗺️
+        <span>Esplora</span>
+    </button>
+
+    <button
+        class="add-button"
+        onclick="openPost()"
+    >
+        +
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="goTo('community', this)"
+    >
+        🔥
+        <span>Community</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="goTo('profile', this)"
+    >
+        👤
+        <span>Profilo</span>
+    </button>
+
+</nav>
+
+
+<div
+    id="venueModal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+        <button
+            class="close"
+            onclick="closeModal()"
+        >
+            ✕
+        </button>
+
+        <div
+            id="venueDetails"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<div
+    id="postModal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+        <button
+            class="close"
+            onclick="closePost()"
+        >
+            ✕
+        </button>
+
+        <h2>
+            Crea un post 📸
+        </h2>
+
+        <input
+            id="postVenue"
+            placeholder="Locale"
+        >
+
+        <textarea
+            id="postText"
+            placeholder="Racconta la tua serata..."
+        ></textarea>
+
+        <button
+            class="main-button"
+            onclick="publishPost()"
+        >
+            Pubblica
+        </button>
+
+    </div>
+
+</div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
