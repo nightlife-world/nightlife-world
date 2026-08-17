@@ -1,13 +1,21 @@
+/* ==========================================
+   RESET
+========================================== */
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background: #07070b;
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     min-height: 100vh;
     padding-bottom: 90px;
 }
@@ -15,12 +23,24 @@ body {
 button {
     border: none;
     cursor: pointer;
+    font-family: inherit;
 }
+
+input,
+textarea,
+button {
+    font-family: inherit;
+}
+
+
+/* ==========================================
+   TOPBAR
+========================================== */
 
 .topbar {
     position: sticky;
     top: 0;
-    z-index: 20;
+    z-index: 1000;
 
     display: flex;
     align-items: center;
@@ -28,7 +48,7 @@ button {
 
     padding: 18px 5%;
 
-    background: rgba(7,7,11,.92);
+    background: rgba(7, 7, 11, 0.92);
     backdrop-filter: blur(15px);
 
     border-bottom: 1px solid #20202b;
@@ -37,6 +57,8 @@ button {
 .logo {
     font-size: 24px;
     font-weight: 900;
+    letter-spacing: -1px;
+    white-space: nowrap;
 }
 
 .logo span {
@@ -56,6 +78,13 @@ button {
     padding: 12px 16px;
 
     border-radius: 30px;
+
+    transition: 0.2s;
+}
+
+.search-box:focus-within {
+    border-color: #a63aff;
+    box-shadow: 0 0 20px rgba(166, 58, 255, 0.12);
 }
 
 .search-box input {
@@ -70,6 +99,10 @@ button {
     font-size: 15px;
 }
 
+.search-box input::placeholder {
+    color: #777;
+}
+
 .location-btn {
     width: 45px;
     height: 45px;
@@ -80,12 +113,29 @@ button {
     color: white;
 
     font-size: 20px;
+
+    transition: 0.2s;
 }
+
+.location-btn:hover {
+    background: #a63aff;
+    transform: scale(1.05);
+}
+
+
+/* ==========================================
+   MAIN
+========================================== */
 
 main {
     width: min(1200px, 92%);
     margin: auto;
 }
+
+
+/* ==========================================
+   HERO
+========================================== */
 
 .hero {
     min-height: 480px;
@@ -98,7 +148,12 @@ main {
     background:
         radial-gradient(
             circle at 70% 40%,
-            rgba(160,40,255,.35),
+            rgba(160, 40, 255, 0.35),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 20% 70%,
+            rgba(70, 30, 150, 0.15),
             transparent 35%
         );
 }
@@ -113,7 +168,8 @@ main {
 
 .hero h1 {
     font-size: clamp(45px, 8vw, 90px);
-    line-height: .95;
+    line-height: 0.95;
+    letter-spacing: -4px;
 }
 
 .hero h1 span {
@@ -125,7 +181,13 @@ main {
     max-width: 550px;
     line-height: 1.6;
     margin: 25px 0;
+    font-size: 16px;
 }
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
 
 .main-button {
     background: linear-gradient(
@@ -143,8 +205,25 @@ main {
     font-weight: bold;
 
     box-shadow:
-        0 10px 30px rgba(150,50,255,.25);
+        0 10px 30px rgba(150, 50, 255, 0.25);
+
+    transition: 0.2s;
 }
+
+.main-button:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 15px 35px rgba(150, 50, 255, 0.4);
+}
+
+.main-button:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   SECTION TITLE
+========================================== */
 
 .section-title {
     display: flex;
@@ -156,11 +235,17 @@ main {
 
 .section-title h2 {
     font-size: 30px;
+    letter-spacing: -1px;
 }
 
 .section-title > span {
     color: #888;
 }
+
+
+/* ==========================================
+   CATEGORIES
+========================================== */
 
 .categories {
     display: flex;
@@ -169,6 +254,12 @@ main {
     overflow-x: auto;
 
     padding-bottom: 15px;
+
+    scrollbar-width: none;
+}
+
+.categories::-webkit-scrollbar {
+    display: none;
 }
 
 .category {
@@ -182,105 +273,93 @@ main {
     color: #aaa;
 
     border: 1px solid #292936;
+
+    transition: 0.2s;
+}
+
+.category:hover {
+    border-color: #a63aff;
+    color: white;
 }
 
 .category.active {
     background: #a63aff;
     color: white;
+    border-color: #a63aff;
 }
 
-.map {
-    height: 400px;
+
+/* ==========================================
+   MAPPA
+========================================== */
+
+#map {
+    width: 100%;
+    height: 500px;
 
     margin: 20px 0;
 
-    overflow: hidden;
-
     border-radius: 25px;
 
-    background:
-        radial-gradient(
-            circle at 30% 30%,
-            #282842,
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 70% 70%,
-            #31233d,
-            transparent 35%
-        ),
-        #111119;
+    overflow: hidden;
+
+    background: #111119;
 
     border: 1px solid #292936;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.3);
 }
 
-.map-content {
-    width: 100%;
-    height: 100%;
-
-    position: relative;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.leaflet-container {
+    background: #111119;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-.map-center {
-    text-align: center;
-    color: #888;
-    font-size: 15px;
+.map-popup {
+    min-width: 200px;
 }
 
-.map-pin {
-    position: absolute;
-
-    font-size: 25px;
-
-    animation: pulse 2s infinite;
+.map-popup h3 {
+    margin-bottom: 7px;
+    color: #111;
 }
 
-.pin1 {
-    left: 18%;
-    top: 25%;
+.map-popup p {
+    margin: 5px 0;
+    color: #555;
 }
 
-.pin2 {
-    left: 47%;
-    top: 35%;
+.map-popup button {
+    margin-top: 8px;
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    background: #a63aff;
+    color: white;
+
+    font-weight: bold;
 }
 
-.pin3 {
-    right: 20%;
-    top: 20%;
+.map-popup button:hover {
+    background: #8f31ff;
 }
 
-.pin4 {
-    right: 35%;
-    bottom: 25%;
-}
 
-.pin5 {
-    left: 30%;
-    bottom: 20%;
-}
-
-@keyframes pulse {
-
-    0%,100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.25);
-    }
-
-}
+/* ==========================================
+   LOCALI
+========================================== */
 
 .venues {
     display: grid;
 
     grid-template-columns:
-        repeat(auto-fit, minmax(260px, 1fr));
+        repeat(
+            auto-fit,
+            minmax(260px, 1fr)
+        );
 
     gap: 20px;
 }
@@ -294,13 +373,16 @@ main {
 
     overflow: hidden;
 
-    transition: .2s;
+    transition: 0.2s;
 }
 
 .venue:hover {
     transform: translateY(-5px);
 
     border-color: #9f39ff;
+
+    box-shadow:
+        0 15px 35px rgba(120, 30, 200, 0.15);
 }
 
 .venue-image {
@@ -318,6 +400,17 @@ main {
             #8d30aa,
             #1c0e2c
         );
+
+    overflow: hidden;
+}
+
+.venue-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
 }
 
 .venue-info {
@@ -369,7 +462,39 @@ main {
 
     background: #262431;
     color: white;
+
+    transition: 0.2s;
 }
+
+.venue-button:hover {
+    background: #a63aff;
+}
+
+
+/* ==========================================
+   EMPTY
+========================================== */
+
+.empty {
+    grid-column: 1 / -1;
+
+    text-align: center;
+
+    padding: 50px 20px;
+
+    background: #111119;
+
+    border: 1px solid #252531;
+
+    border-radius: 20px;
+
+    color: #777;
+}
+
+
+/* ==========================================
+   COMMUNITY
+========================================== */
 
 .post {
     background: #111119;
@@ -381,6 +506,12 @@ main {
     border-radius: 20px;
 
     margin-bottom: 15px;
+
+    transition: 0.2s;
+}
+
+.post:hover {
+    border-color: #9f39ff;
 }
 
 .post-user {
@@ -401,6 +532,11 @@ main {
     line-height: 1.6;
 }
 
+
+/* ==========================================
+   PROFILO
+========================================== */
+
 .profile-card {
     margin: 60px auto;
 
@@ -408,20 +544,29 @@ main {
 
     text-align: center;
 
-    background: #111119;
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(166, 58, 255, 0.12),
+            transparent 45%
+        ),
+        #111119;
 
     border: 1px solid #252531;
 
     padding: 40px;
 
     border-radius: 25px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
 .avatar {
     width: 90px;
     height: 90px;
 
-    margin: auto;
+    margin: 0 auto 15px;
 
     display: flex;
     align-items: center;
@@ -429,11 +574,21 @@ main {
 
     border-radius: 50%;
 
-    background: #25202d;
+    background:
+        linear-gradient(
+            135deg,
+            #8f31ff,
+            #d13cff
+        );
 
     font-size: 40px;
 
-    margin-bottom: 15px;
+    box-shadow:
+        0 10px 30px rgba(150, 50, 255, 0.3);
+}
+
+.profile-card h2 {
+    font-size: 27px;
 }
 
 .profile-card p {
@@ -442,66 +597,148 @@ main {
     margin: 10px 0 25px;
 }
 
-.bottom-nav {
-    position: fixed;
 
-    bottom: 0;
-    left: 0;
-    right: 0;
+/* ==========================================
+   AUTENTICAZIONE
+========================================== */
 
-    z-index: 30;
+#authBox {
+    margin: 60px auto;
 
-    display: flex;
+    max-width: 460px;
 
-    align-items: center;
-    justify-content: space-around;
+    padding: 35px;
 
-    background: rgba(12,12,18,.96);
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(184, 60, 255, 0.18),
+            transparent 40%
+        ),
+        #111119;
 
-    border-top: 1px solid #282833;
+    border: 1px solid #292936;
 
-    padding: 10px;
+    border-radius: 25px;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.4);
 }
 
-.nav-item {
-    background: none;
-
-    color: #777;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 4px;
-
-    font-size: 18px;
+#authBox h2 {
+    font-size: 30px;
+    margin-bottom: 8px;
 }
 
-.nav-item span {
-    font-size: 10px;
+#authBox p {
+    color: #888;
+    line-height: 1.5;
 }
 
-.nav-item.active {
-    color: #bd43ff;
-}
+#authBox input {
+    display: block;
 
-.add-button {
-    width: 50px;
-    height: 50px;
+    width: 100%;
 
-    border-radius: 50%;
+    box-sizing: border-box;
 
-    background: linear-gradient(
-        135deg,
-        #9132ff,
-        #d83aff
-    );
+    margin-top: 14px;
+
+    padding: 15px 16px;
+
+    border-radius: 13px;
+
+    border: 1px solid #30303c;
+
+    background: #0e0e14;
 
     color: white;
 
-    font-size: 30px;
+    outline: none;
+
+    font-size: 15px;
+
+    transition: 0.2s;
 }
+
+#authBox input::placeholder {
+    color: #666;
+}
+
+#authBox input:focus {
+    border-color: #a63aff;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            166,
+            58,
+            255,
+            0.1
+        );
+}
+
+#authSubmit {
+    width: 100%;
+
+    margin-top: 18px;
+}
+
+.auth-secondary {
+    display: block;
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: transparent;
+
+    color: #aaa;
+
+    cursor: pointer;
+
+    text-align: center;
+
+    transition: 0.2s;
+}
+
+.auth-secondary:hover {
+    color: #c044ff;
+}
+
+#loggedProfile {
+    display: none;
+
+    margin: 60px auto;
+
+    max-width: 500px;
+
+    text-align: center;
+
+    background:
+        radial-gradient(
+            circle at top,
+            rgba(166, 58, 255, 0.14),
+            transparent 45%
+        ),
+        #111119;
+
+    border: 1px solid #292936;
+
+    padding: 40px;
+
+    border-radius: 25px;
+}
+
+#loggedUsername {
+    color: #bd43ff;
+}
+
+
+/* ==========================================
+   MODALI
+========================================== */
 
 .modal {
     display: none;
@@ -512,12 +749,15 @@ main {
 
     z-index: 9999;
 
-    background: rgba(0,0,0,.8);
+    background:
+        rgba(0, 0, 0, 0.82);
 
     align-items: center;
     justify-content: center;
 
     padding: 20px;
+
+    backdrop-filter: blur(5px);
 }
 
 .modal-card {
@@ -536,6 +776,9 @@ main {
     padding: 25px;
 
     position: relative;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5);
 }
 
 .close {
@@ -552,6 +795,14 @@ main {
     background: #292933;
 
     color: white;
+
+    z-index: 5;
+
+    transition: 0.2s;
+}
+
+.close:hover {
+    background: #a63aff;
 }
 
 .modal-card input,
@@ -573,6 +824,11 @@ main {
     outline: none;
 }
 
+.modal-card input:focus,
+.modal-card textarea:focus {
+    border-color: #a63aff;
+}
+
 .modal-card textarea {
     height: 130px;
 
@@ -583,78 +839,263 @@ main {
     margin-top: 15px;
 }
 
-@media(max-width:700px) {
+
+/* ==========================================
+   BOTTOM NAVIGATION
+========================================== */
+
+.bottom-nav {
+    position: fixed;
+
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 3000;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-around;
+
+    background:
+        rgba(12, 12, 18, 0.96);
+
+    border-top: 1px solid #282833;
+
+    padding: 10px;
+
+    backdrop-filter: blur(15px);
+}
+
+.nav-item {
+    background: none;
+
+    color: #777;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    font-size: 18px;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    color: white;
+}
+
+.nav-item span {
+    font-size: 10px;
+}
+
+.nav-item.active {
+    color: #bd43ff;
+}
+
+.add-button {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #9132ff,
+            #d83aff
+        );
+
+    color: white;
+
+    font-size: 30px;
+
+    box-shadow:
+        0 8px 25px rgba(150, 50, 255, 0.35);
+
+    transition: 0.2s;
+}
+
+.add-button:hover {
+    transform: scale(1.08);
+}
+
+
+/* ==========================================
+   ANIMAZIONE
+========================================== */
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.25);
+    }
+
+}
+
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #08080c;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #292936;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a63aff;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 700px) {
 
     .topbar {
         gap: 8px;
+        padding: 14px 4%;
     }
 
     .logo {
         font-size: 18px;
     }
 
+    .search-box {
+        padding: 10px 12px;
+    }
+
+    .search-box input {
+        font-size: 13px;
+    }
+
+    .location-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+
+    main {
+        width: 94%;
+    }
+
     .hero {
         min-height: 420px;
+        padding: 50px 0;
     }
 
-    .map {
-        height: 300px;
+    .hero h1 {
+        font-size: clamp(
+            43px,
+            13vw,
+            65px
+        );
+
+        letter-spacing: -3px;
+    }
+
+    .hero-text {
+        font-size: 14px;
+    }
+
+    .section-title {
+        margin-top: 40px;
+    }
+
+    .section-title h2 {
+        font-size: 25px;
+    }
+
+    #map {
+        height: 320px;
+        border-radius: 18px;
+    }
+
+    .venues {
+        grid-template-columns: 1fr;
+    }
+
+    .venue-image {
+        height: 200px;
+    }
+
+    #authBox {
+        margin: 40px auto;
+        padding: 25px 20px;
+    }
+
+    #authBox h2 {
+        font-size: 26px;
+    }
+
+    .profile-card,
+    #loggedProfile {
+        margin: 40px auto;
+        padding: 30px 20px;
+    }
+
+    .bottom-nav {
+        padding-bottom: calc(
+            10px + env(safe-area-inset-bottom)
+        );
     }
 
 }
-#map {
-    width: 100%;
-    height: 500px;
-    margin: 20px 0;
-    border-radius: 25px;
-    overflow: hidden;
-    border: 1px solid #292936;
-}
 
-.map-popup {
-    min-width: 180px;
-}
 
-.map-popup h3 {
-    margin-bottom: 5px;
-}
+/* ==========================================
+   IPHONE / SCHERMI MOLTO PICCOLI
+========================================== */
 
-.map-popup p {
-    margin: 5px 0;
-    color: #aaa;
-}
+@media (max-width: 420px) {
 
-.map-popup button {
-    margin-top: 8px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    background: #a63aff;
-    color: white;
-}
-#authBox {
-    margin-top: 25px;
-}
+    .topbar {
+        padding: 12px 3%;
+    }
 
-#authBox input {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 12px;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #333;
-    background: #111118;
-    color: white;
-    outline: none;
-}
+    .logo {
+        font-size: 16px;
+    }
 
-.auth-secondary {
-    display: block;
-    width: 100%;
-    margin-top: 12px;
-    padding: 12px;
-    background: transparent;
-    border: none;
-    color: #aaa;
-    cursor: pointer;
+    .location-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .hero h1 {
+        font-size: 43px;
+    }
+
+    .categories {
+        gap: 7px;
+    }
+
+    .category {
+        padding: 9px 13px;
+        font-size: 12px;
+    }
+
+    #authBox {
+        border-radius: 20px;
+    }
+
 }
